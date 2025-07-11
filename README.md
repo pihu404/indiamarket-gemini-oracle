@@ -1,73 +1,81 @@
-# Welcome to your Lovable project
 
-## Project info
+# AI Stock Market Oracle
 
-**URL**: https://lovable.dev/projects/45465823-90bd-428c-b75a-6b2431d53dfb
+A minimal stock market prediction app powered by Google's Gemini AI, built with React and TypeScript.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- 🤖 **AI-Powered Analysis**: Uses Google Gemini AI for intelligent stock predictions
+- 📊 **Technical Analysis**: Provides technical factors and risk assessments
+- 🎯 **Price Targets**: Generates price predictions with confidence levels
+- 📱 **Responsive Design**: Clean, minimal interface that works on all devices
+- ⚡ **Fast & Modern**: Built with Vite, React 18, and TypeScript
 
-**Use Lovable**
+## Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/45465823-90bd-428c-b75a-6b2431d53dfb) and start prompting.
+- **Frontend**: React 18, TypeScript, Tailwind CSS
+- **UI Components**: Shadcn/ui, Radix UI
+- **AI**: Google Gemini API
+- **Build Tool**: Vite
+- **Routing**: React Router
 
-Changes made via Lovable will be committed automatically to this repo.
+## Getting Started
 
-**Use your preferred IDE**
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd stock-market-oracle
+   ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+3. **Start the development server**
+   ```bash
+   npm run dev
+   ```
 
-Follow these steps:
+4. **Open your browser**
+   Navigate to `http://localhost:8080`
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Usage
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+1. Enter a stock symbol (e.g., AAPL, TSLA, MSFT)
+2. Click "Analyze Stock" to get AI-powered predictions
+3. View detailed analysis including:
+   - Price targets and confidence levels
+   - Technical factors and risk assessments
+   - Market sentiment and volatility analysis
+   - Buy/Sell/Hold recommendations
 
-# Step 3: Install the necessary dependencies.
-npm i
+## API Integration
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+The app uses Google Gemini AI API for generating stock predictions. The AI analyzes:
+- Recent market trends
+- Company fundamentals
+- Industry outlook
+- Economic indicators
+- Technical patterns
+- News sentiment
 
-**Edit a file directly in GitHub**
+## Deployment
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+This project is ready to be deployed to any static hosting service:
 
-**Use GitHub Codespaces**
+- **Vercel**: `npm run build` and deploy the `dist` folder
+- **Netlify**: Connect your GitHub repo for automatic deployments
+- **GitHub Pages**: Use GitHub Actions for automated deployment
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Disclaimer
 
-## What technologies are used for this project?
+⚠️ **Important**: This application is for educational purposes only. The AI-generated predictions should not be considered as financial advice. Always consult with qualified financial advisors before making investment decisions.
 
-This project is built with:
+## License
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+MIT License - feel free to use this project for learning and development.
 
-## How can I deploy this project?
+## Contributing
 
-Simply open [Lovable](https://lovable.dev/projects/45465823-90bd-428c-b75a-6b2431d53dfb) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Contributions are welcome! Please feel free to submit a Pull Request.
