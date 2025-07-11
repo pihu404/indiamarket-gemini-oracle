@@ -1,4 +1,6 @@
 
+import { fetchRealStockPrice, getIndianStockSymbol } from './stockPrice';
+
 const GEMINI_API_KEY = 'AIzaSyBiA1-a3wslCTdzLOEaMY7U8iJBGS0ETzU';
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
@@ -13,18 +15,34 @@ export interface GeminiResponse {
 }
 
 export const analyzeStockWithGemini = async (symbol: string) => {
+  // First, try to get real stock price
+  let realPrice: number | null = null;
+  let priceSource = 'estimated';
+  
+  try {
+    const stockSymbol = getIndianStockSymbol(symbol);
+    const priceData = await fetchRealStockPrice(stockSymbol);
+    realPrice = priceData.price;
+    priceSource = 'real-time';
+    console.log(`Fetched real price for ${symbol}: ₹${realPrice.toFixed(2)}`);
+  } catch (error) {
+    console.log(`Could not fetch real price for ${symbol}, using AI estimation:`, error);
+  }
+
   const prompt = `
     As an AI financial analyst, provide a detailed stock analysis for ${symbol}. 
+    
+    ${realPrice ? `IMPORTANT: The current real-time price is ₹${realPrice.toFixed(2)} INR. Use this exact price as the currentPrice in your response.` : ''}
     
     Please analyze the following aspects and respond with a JSON object containing:
     - symbol: "${symbol}"
     - companyName: (research and provide the full company name)
-    - currentPrice: (current price in Indian Rupees INR - for Indian stocks use actual INR prices, for US stocks convert from USD to INR using current exchange rate ~83 INR per USD)
+    - currentPrice: ${realPrice ? realPrice.toFixed(2) : '(current price in Indian Rupees INR - for Indian stocks use actual INR prices, for US stocks convert from USD to INR using current exchange rate ~83 INR per USD)'}
     - prediction: ("BULLISH", "BEARISH", or "NEUTRAL")
     - confidence: (confidence level as percentage 0-100)
-    - priceTarget: (predicted price target in INR)
+    - priceTarget: (predicted price target in INR based on the current price)
     - timeframe: (prediction timeframe, e.g., "3-6 months")
-    - reasoning: (detailed explanation of your analysis mentioning currency context)
+    - reasoning: (detailed explanation of your analysis mentioning currency context and current market conditions)
     - technicalFactors: (array of positive technical indicators)
     - riskFactors: (array of potential risks)
     - marketSentiment: ("POSITIVE", "NEGATIVE", or "NEUTRAL")
@@ -38,10 +56,11 @@ export const analyzeStockWithGemini = async (symbol: string) => {
     4. Economic indicators and market conditions (Indian and global)
     5. Technical analysis patterns
     6. News sentiment and market psychology
+    7. Current market price of ₹${realPrice ? realPrice.toFixed(2) : 'N/A'}
 
-    IMPORTANT: All prices must be in Indian Rupees (INR). For Indian stocks listed on NSE/BSE, use actual INR prices. For US stocks, convert USD prices to INR using approximate exchange rate of 83 INR per USD.
+    IMPORTANT: All prices must be in Indian Rupees (INR). ${realPrice ? `Use the provided real-time price of ₹${realPrice.toFixed(2)} as the currentPrice.` : 'For Indian stocks listed on NSE/BSE, use actual INR prices. For US stocks, convert USD prices to INR using approximate exchange rate of 83 INR per USD.'}
 
-    Provide realistic and well-reasoned predictions. Return only valid JSON without any markdown formatting.
+    Provide realistic and well-reasoned predictions based on current market data. Return only valid JSON without any markdown formatting.
   `;
 
   try {
@@ -84,7 +103,18 @@ export const analyzeStockWithGemini = async (symbol: string) => {
     const cleanedText = generatedText.replace(/```json\n?|\n?```/g, '').trim();
     
     try {
-      return JSON.parse(cleanedText);
+      const result = JSON.parse(cleanedText);
+      
+      // Ensure we use the real price if we fetched it
+      if (realPrice && result.currentPrice !== realPrice) {
+        result.currentPrice = realPrice;
+        console.log(`Corrected price to real-time value: ₹${realPrice.toFixed(2)}`);
+      }
+      
+      return {
+        ...result,
+        priceSource // Add source indicator
+      };
     } catch (parseError) {
       console.error('Failed to parse JSON:', cleanedText);
       throw new Error('Invalid JSON response from AI');

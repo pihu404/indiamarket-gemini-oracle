@@ -70,8 +70,13 @@ export const StockAnalysis = ({ prediction }: StockAnalysisProps) => {
               {prediction.prediction}
             </Badge>
           </CardTitle>
-          <CardDescription>
-            Current Price: {formatINR(prediction.currentPrice)}
+          <CardDescription className="flex flex-col gap-1">
+            <span>Current Price: {formatINR(prediction.currentPrice)}</span>
+            {(prediction as any).priceSource && (
+              <span className="text-xs text-muted-foreground">
+                Price Source: {(prediction as any).priceSource === 'real-time' ? '🟢 Real-time Data' : '🟡 Estimated'}
+              </span>
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
