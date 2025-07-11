@@ -1,6 +1,6 @@
 
 const GEMINI_API_KEY = 'AIzaSyBiA1-a3wslCTdzLOEaMY7U8iJBGS0ETzU';
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
 export interface GeminiResponse {
   candidates: Array<{
@@ -19,12 +19,12 @@ export const analyzeStockWithGemini = async (symbol: string) => {
     Please analyze the following aspects and respond with a JSON object containing:
     - symbol: "${symbol}"
     - companyName: (research and provide the full company name)
-    - currentPrice: (estimated current price in USD)
+    - currentPrice: (current price in Indian Rupees INR - for Indian stocks use actual INR prices, for US stocks convert from USD to INR using current exchange rate ~83 INR per USD)
     - prediction: ("BULLISH", "BEARISH", or "NEUTRAL")
     - confidence: (confidence level as percentage 0-100)
-    - priceTarget: (predicted price target in USD)
+    - priceTarget: (predicted price target in INR)
     - timeframe: (prediction timeframe, e.g., "3-6 months")
-    - reasoning: (detailed explanation of your analysis)
+    - reasoning: (detailed explanation of your analysis mentioning currency context)
     - technicalFactors: (array of positive technical indicators)
     - riskFactors: (array of potential risks)
     - marketSentiment: ("POSITIVE", "NEGATIVE", or "NEUTRAL")
@@ -35,9 +35,11 @@ export const analyzeStockWithGemini = async (symbol: string) => {
     1. Recent market trends and performance
     2. Company fundamentals and business model
     3. Industry outlook and competitive position
-    4. Economic indicators and market conditions
+    4. Economic indicators and market conditions (Indian and global)
     5. Technical analysis patterns
     6. News sentiment and market psychology
+
+    IMPORTANT: All prices must be in Indian Rupees (INR). For Indian stocks listed on NSE/BSE, use actual INR prices. For US stocks, convert USD prices to INR using approximate exchange rate of 83 INR per USD.
 
     Provide realistic and well-reasoned predictions. Return only valid JSON without any markdown formatting.
   `;

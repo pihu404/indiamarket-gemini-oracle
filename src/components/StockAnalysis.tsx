@@ -43,6 +43,20 @@ export const StockAnalysis = ({ prediction }: StockAnalysisProps) => {
     }
   };
 
+  // Format currency in Indian Rupees
+  const formatINR = (amount: number) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(amount);
+  };
+
+  // Calculate price difference
+  const priceDifference = prediction.priceTarget - prediction.currentPrice;
+  const percentageChange = (priceDifference / prediction.currentPrice) * 100;
+
   return (
     <div className="space-y-6">
       <Card>
@@ -57,7 +71,7 @@ export const StockAnalysis = ({ prediction }: StockAnalysisProps) => {
             </Badge>
           </CardTitle>
           <CardDescription>
-            Current Price: ${prediction.currentPrice.toFixed(2)}
+            Current Price: {formatINR(prediction.currentPrice)}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -67,9 +81,12 @@ export const StockAnalysis = ({ prediction }: StockAnalysisProps) => {
                 <Target className="h-4 w-4" />
                 Price Target
               </Label>
-              <p className="text-2xl font-bold">${prediction.priceTarget.toFixed(2)}</p>
-              <p className="text-sm text-muted-foreground">
-                {((prediction.priceTarget - prediction.currentPrice) / prediction.currentPrice * 100).toFixed(1)}% from current
+              <p className="text-2xl font-bold">{formatINR(prediction.priceTarget)}</p>
+              <p className={`text-sm ${percentageChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {percentageChange >= 0 ? '↗' : '↘'} {Math.abs(percentageChange).toFixed(1)}% from current
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {priceDifference >= 0 ? '+' : ''}{formatINR(priceDifference)} potential change
               </p>
             </div>
             
